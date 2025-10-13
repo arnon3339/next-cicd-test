@@ -1,0 +1,13 @@
+name: Hello push
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Hello from $GITHUB_WORKFLOW on $GITHUB_REF"
