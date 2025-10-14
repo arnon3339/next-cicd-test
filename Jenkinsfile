@@ -7,6 +7,10 @@ pipeline {
     PORT      = '3000'
   }
 
+  triggers {
+    githubPush()
+  }
+
   stages {
     stage('Checkout') {
       when { branch 'main' }
