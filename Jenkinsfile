@@ -8,7 +8,7 @@ pipeline {
   }
 
   triggers {
-    githubPush()
+    // githubPush()
   }
 
   stages {
@@ -47,7 +47,30 @@ pipeline {
   }
 
   post {
-    success { echo "✅ Deployed ${CONTAINER} from ${env.GIT_COMMIT.take(7)}" }
-    failure { echo "❌ Deploy failed — check the console log" }
+    success { 
+      withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_URL')]) {
+        sh '''
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{\"content\": \"✅ **Deployment Successful**: ${JOB_NAME} #${BUILD_NUMBER} (${GIT_COMMIT:0:7})\"}" \
+              "$DISCORD_URL"
+
+          echo "✅ Deployed ${CONTAINER} from ${env.GIT_COMMIT.take(7)}" 
+        '''
+      }
+    }
+
+    failure { 
+      withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_URL')]) {
+        sh '''
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{\"content\": \"❌ **Deployment Failed**: ${JOB_NAME} #${BUILD_NUMBER}\"}" \
+              "$DISCORD_URL"
+
+          echo "❌ Deploy failed — check the console log" 
+        '''
+      }
+    }
   }
 }
