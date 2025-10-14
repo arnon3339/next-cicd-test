@@ -7,9 +7,9 @@ pipeline {
     PORT      = '3000'
   }
 
-  triggers {
+  // triggers {
     // githubPush()
-  }
+  // }
 
   stages {
     stage('Checkout') {
