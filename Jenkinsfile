@@ -9,28 +9,30 @@ pipeline {
 
   stages {
     stage('Checkout') {
-        when { branch 'main' }
-        steps { checkout scm }
+      when { branch 'main' }
+      steps { checkout scm }
     }
 
     stage('Build image') {
+      when { branch 'main' }
       steps {
-        sh '''#!/usr/bin/env bash
-          set -euo pipefail
-          docker build -t "${IMAGE}" .
-          # also tag latest if you want
-          docker tag "${IMAGE}" nextjs:latest
-        '''
+        withCredentials([file(credentialsId: 'github-test-dockerfile', variable: 'DOCKER_FILE')]) {
+          sh '''#!/usr/bin/env bash
+            set -euo pipefail
+            docker build -t "${IMAGE}" -f "${DOCKER_FILE}" .
+            docker tag "${IMAGE}" nextjs:latest
+          '''
+        }
       }
     }
 
     stage('Deploy') {
+      when { branch 'main' }
       steps {
         sh '''#!/usr/bin/env bash
           set -euo pipefail
           docker rm -f "${CONTAINER}" 2>/dev/null || true
           docker rmi -f nextjs:latest 2>/dev/null || true
-
           docker run -d --name "${CONTAINER}" \
             -p "${PORT}:3000" \
             --restart unless-stopped \
