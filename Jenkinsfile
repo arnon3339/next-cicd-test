@@ -2,9 +2,9 @@ pipeline {
   agent { label 'docker-agent' }
 
   environment {
-    IMAGE     = "nextjs:${env.GIT_COMMIT.take(7)}"
-    CONTAINER = 'nextjs'
-    PORT      = '3000'
+    IMAGE       = "nextjs:${env.GIT_COMMIT.take(7)}"
+    CONTAINER   = 'nextjs'
+    PORT        = '3000'
   }
 
   // triggers {
@@ -50,9 +50,29 @@ pipeline {
     success {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
-          curl -H "Content-Type: application/json" \
-          -d '{"content": "Deploy successful! ✅"}' \
-          "$DISCORD_URL"
+          SHORT_SHA=$(printf "%s" "$GIT_COMMIT" | cut -c1-7)
+          APP_URL  = 'https://aoc.dataxo.info'
+          curl -X POST \
+          -H "Content-Type: application/json" \
+          -d @<(cat <<EOF
+          {
+            "username": "Jenkins CI/CD",
+            "avatar_url": "${APP_URL}/mule3.png",
+            "embeds": [{
+              "title": "✅ Deployment Successful!",
+              "description": "**Application has been successfully deployed.**\\n\\n[Visit the app](${APP_URL})",
+              "color": 5814783,
+              "fields": [
+              { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
+              ],
+              "image": { "url": "${APP_URL}/mule-logo.png" },
+              "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
+              "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            }]
+          }
+          EOF
+          ) \
+            "$DISCORD_URL"
 
           echo "✅ Deployed ${CONTAINER}"
         '''
@@ -62,9 +82,28 @@ pipeline {
     failure {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
-          curl -H "Content-Type: application/json" \
-          -d '{"content": "Deploy fail! ❌"}' \
-          "$DISCORD_URL"
+          SHORT_SHA=$(printf "%s" "$GIT_COMMIT" | cut -c1-7)
+          APP_URL  = 'https://aoc.dataxo.info'
+          curl -X POST \
+          -H "Content-Type: application/json" \
+          -d @<(cat <<EOF
+          {
+            "username": "Jenkins CI/CD",
+            "avatar_url": "${APP_URL}/mule3.png",
+            "embeds": [{
+              "title": "❌ Deploy failed",
+              "description": "**Application has been failed deployed.**\\n\\n",
+              "color": 11385563,
+              "fields": [
+                { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
+              ],
+              "image": { "url": "${APP_URL}/mule-fail.png" },
+              "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            }]
+          }
+          EOF
+          ) \
+            "$DISCORD_URL"
 
           echo "❌ Deploy failed — check the console log"
         '''
