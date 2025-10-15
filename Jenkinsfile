@@ -47,30 +47,29 @@ pipeline {
   }
 
   post {
-    success { 
+    success {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           curl -H "Content-Type: application/json" \
-              -X POST \
-              -d "{\"content\": \"✅ **Deployment Successful**\"}" \
-              "$DISCORD_URL"
+          -d '{"content": "Deploy successful! ✅"}' \
+          "$DISCORD_URL"
 
-          echo "✅ Deployed ${CONTAINER} from ${env.GIT_COMMIT.take(7)}" 
+          echo "✅ Deployed ${CONTAINER}"
         '''
       }
     }
 
-    failure { 
+    failure {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           curl -H "Content-Type: application/json" \
-              -X POST \
-              -d "{\"content\": \"❌ **Deployment Failed**\"}" \
-              "$DISCORD_URL"
+          -d '{"content": "Deploy fail! ❌"}' \
+          "$DISCORD_URL"
 
-          echo "❌ Deploy failed — check the console log" 
+          echo "❌ Deploy failed — check the console log"
         '''
       }
     }
   }
+
 }
