@@ -20,7 +20,7 @@ pipeline {
     stage('Build image') {
       when { branch 'main' }
       steps {
-        error('💥 Simulated failure for notification testing')
+        // error('💥 Simulated failure for notification testing')
         withCredentials([file(credentialsId: 'github-test-dockerfile', variable: 'DOCKER_FILE')]) {
           sh '''#!/usr/bin/env bash
             set -euo pipefail
