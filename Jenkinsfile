@@ -48,7 +48,7 @@ pipeline {
 
   post {
     success { 
-      withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_URL')]) {
+      withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           curl -H "Content-Type: application/json" \
               -X POST \
@@ -61,7 +61,7 @@ pipeline {
     }
 
     failure { 
-      withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_URL')]) {
+      withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           curl -H "Content-Type: application/json" \
               -X POST \
