@@ -22,7 +22,7 @@ pipeline {
     stage('Build image') {
       when { branch 'main' }
       steps {
-        // error('💥 Simulated failure for notification testing')
+        error('💥 Simulated failure for notification testing')
         withCredentials([file(credentialsId: 'github-test-dockerfile', variable: 'DOCKER_FILE')]) {
           sh '''#!/usr/bin/env bash
             set -euo pipefail
@@ -93,12 +93,13 @@ EOF
   "avatar_url": "${APP_URL}/mule3.png",
   "embeds": [{
     "title": "❌ Deployment Failed!",
-    "description": "**Application has been fail to be deployed.**\\n\\n",
+    "description": "**Application has been fail to be deployed.**\\n\\n\u200b",
     "color": 15158332,
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
     "image": { "url": "${APP_URL}/mule-fail.png" },
+    "footer": { "text": "\u200b" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
 }
