@@ -92,14 +92,14 @@ EOF
   "username": "Jenkins CI/CD",
   "avatar_url": "${APP_URL}/mule3.png",
   "embeds": [{
-    "title": "❌ Deployment Failed!",
-    "description": "**Application has been fail to be deployed.**\\n\\n\u200b",
+    "title": "❌ Deployment Failed! ",
+    "description": "**Application has been fail to be deployed**\\n\\n[Visit the app](${APP_URL})",
     "color": 15158332,
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
-    "image": { "url": "${APP_URL}/mule-fail.png" },
-    "footer": { "text": "\u200b" },
+    "image": { "url": "${APP_URL}/mule-logo-fail.png" },
+    "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
 }
