@@ -51,7 +51,7 @@ pipeline {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           SHORT_SHA=$(printf "%s" "$GIT_COMMIT" | cut -c1-7)
-          APP_URL  = 'https://aoc.dataxo.info'
+          APP_URL=https://aoc.dataxo.info
           curl -X POST \
           -H "Content-Type: application/json" \
           -d @<(cat <<EOF
@@ -83,7 +83,7 @@ pipeline {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           SHORT_SHA=$(printf "%s" "$GIT_COMMIT" | cut -c1-7)
-          APP_URL  = 'https://aoc.dataxo.info'
+          APP_URL=https://aoc.dataxo.info
           curl -X POST \
           -H "Content-Type: application/json" \
           -d @<(cat <<EOF
