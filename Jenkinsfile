@@ -60,7 +60,7 @@ pipeline {
           "$DISCORD_URL" <<EOF
 {
   "username": "Jenkins CI/CD",
-  "avatar_url": "${APP_URL}/mule3.png",
+  "avatar_url": "${APP_URL}/mule-avatar.png",
   "embeds": [{
     "title": "✅ Deployment Successful!",
     "description": "**Application has been successfully deployed.**\\n\\n[Visit the app](${APP_URL})",
@@ -68,7 +68,7 @@ pipeline {
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
-    "image": { "url": "${APP_URL}/mule-logo-2.png" },
+    "image": { "url": "${APP_URL}/mule-sucess.png" },
     "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
@@ -90,7 +90,7 @@ EOF
           "$DISCORD_URL" <<EOF
 {
   "username": "Jenkins CI/CD",
-  "avatar_url": "${APP_URL}/mule3.png",
+  "avatar_url": "${APP_URL}/mule-avatar.png",
   "embeds": [{
     "title": "❌ Deployment Failed! ",
     "description": "**Application has been fail to be deployed**\\n\\n[Visit the app](${APP_URL})",
@@ -98,7 +98,7 @@ EOF
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
-    "image": { "url": "${APP_URL}/mule-logo-fail.png" },
+    "image": { "url": "${APP_URL}/mule-fail.png" },
     "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
