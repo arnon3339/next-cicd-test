@@ -2,9 +2,11 @@ pipeline {
   agent { label 'docker-agent' }
 
   environment {
-    IMAGE       = "nextjs:${env.GIT_COMMIT.take(7)}"
-    CONTAINER   = 'nextjs'
-    PORT        = '3000'
+    IMAGE         = "nextjs:${env.GIT_COMMIT.take(7)}"
+    CONTAINER     = "nextjs"
+    PORT          = "3000"
+    APP_URL       = "https://aoc.dataxo.info"
+    GIT_REPO_URL  = "https://github.com/arnon3339/next-cicd-test"
   }
 
   triggers {
@@ -52,10 +54,10 @@ pipeline {
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           SHORT_SHA=$(printf "%s" "$GIT_COMMIT" | cut -c1-7)
-          APP_URL=https://aoc.dataxo.info
-          curl -X POST \
+          curl -sSf \
           -H "Content-Type: application/json" \
--d @<(cat <<EOF
+          --data @- \
+          "$DISCORD_URL" <<EOF
 {
   "username": "Jenkins CI/CD",
   "avatar_url": "${APP_URL}/mule3.png",
@@ -64,7 +66,7 @@ pipeline {
     "description": "**Application has been successfully deployed.**\\n\\n[Visit the app](${APP_URL})",
     "color": 5814783,
     "fields": [
-    { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
+      { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
     "image": { "url": "${APP_URL}/mule-logo.png" },
     "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
@@ -72,8 +74,6 @@ pipeline {
   }]
 }
 EOF
-          ) \
-            "$DISCORD_URL"
 
           echo "✅ Deployed ${CONTAINER}"
         '''
@@ -84,10 +84,10 @@ EOF
       withCredentials([string(credentialsId: 'aoc-discord-webhook', variable: 'DISCORD_URL')]) {
         sh '''
           SHORT_SHA=$(printf "%s" "$GIT_COMMIT" | cut -c1-7)
-          APP_URL=https://aoc.dataxo.info
-          curl -X POST \
+          curl -sSf \
           -H "Content-Type: application/json" \
--d @<(cat <<EOF
+          --data @- \
+          "$DISCORD_URL" <<EOF
 {
   "username": "Jenkins CI/CD",
   "avatar_url": "${APP_URL}/mule3.png",
@@ -96,15 +96,13 @@ EOF
     "description": "**Application has been fail to be deployed.**\\n\\n",
     "color": 15158332,
     "fields": [
-    { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
+      { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
-    "image": { "url": "${APP_URL}/mule-fail.png" },
+    "image": { "url": "${APP_URL}/mule-fail.png },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
 }
 EOF
-          ) \
-            "$DISCORD_URL"
 
           echo "❌ Deploy failed — check the console log"
         '''
