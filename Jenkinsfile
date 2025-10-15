@@ -7,9 +7,9 @@ pipeline {
     PORT        = '3000'
   }
 
-  // triggers {
-    // githubPush()
-  // }
+  triggers {
+    githubPush()
+  }
 
   stages {
     stage('Checkout') {
@@ -20,6 +20,7 @@ pipeline {
     stage('Build image') {
       when { branch 'main' }
       steps {
+        error('💥 Simulated failure for notification testing')
         withCredentials([file(credentialsId: 'github-test-dockerfile', variable: 'DOCKER_FILE')]) {
           sh '''#!/usr/bin/env bash
             set -euo pipefail
@@ -54,23 +55,23 @@ pipeline {
           APP_URL=https://aoc.dataxo.info
           curl -X POST \
           -H "Content-Type: application/json" \
-          -d @<(cat <<EOF
-          {
-            "username": "Jenkins CI/CD",
-            "avatar_url": "${APP_URL}/mule3.png",
-            "embeds": [{
-              "title": "✅ Deployment Successful!",
-              "description": "**Application has been successfully deployed.**\\n\\n[Visit the app](${APP_URL})",
-              "color": 5814783,
-              "fields": [
-              { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
-              ],
-              "image": { "url": "${APP_URL}/mule-logo.png" },
-              "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
-              "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-            }]
-          }
-          EOF
+-d @<(cat <<EOF
+{
+  "username": "Jenkins CI/CD",
+  "avatar_url": "${APP_URL}/mule3.png",
+  "embeds": [{
+    "title": "✅ Deployment Successful!",
+    "description": "**Application has been successfully deployed.**\\n\\n[Visit the app](${APP_URL})",
+    "color": 5814783,
+    "fields": [
+    { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
+    ],
+    "image": { "url": "${APP_URL}/mule-logo.png" },
+    "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
+    "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  }]
+}
+EOF
           ) \
             "$DISCORD_URL"
 
@@ -86,22 +87,22 @@ pipeline {
           APP_URL=https://aoc.dataxo.info
           curl -X POST \
           -H "Content-Type: application/json" \
-          -d @<(cat <<EOF
-          {
-            "username": "Jenkins CI/CD",
-            "avatar_url": "${APP_URL}/mule3.png",
-            "embeds": [{
-              "title": "❌ Deploy failed",
-              "description": "**Application has been failed deployed.**\\n\\n",
-              "color": 11385563,
-              "fields": [
-                { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
-              ],
-              "image": { "url": "${APP_URL}/mule-fail.png" },
-              "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-            }]
-          }
-          EOF
+-d @<(cat <<EOF
+{
+  "username": "Jenkins CI/CD",
+  "avatar_url": "${APP_URL}/mule3.png",
+  "embeds": [{
+    "title": "❌ Deploy failed",
+    "description": "**Application has been failed deployed.**\\n\\n",
+    "color": 11385563,
+    "fields": [
+      { "name": "Commit", "value": "${SHORT_SHA}", "inline": true }
+    ],
+    "image": { "url": "${APP_URL}/mule-fail.png" },
+    "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  }]
+}
+EOF
           ) \
             "$DISCORD_URL"
 
