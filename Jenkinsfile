@@ -68,7 +68,7 @@ pipeline {
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
-    "image": { "url": "${APP_URL}/mule-logo.png" },
+    "image": { "url": "${APP_URL}/mule-logo-2.png" },
     "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
