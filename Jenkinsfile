@@ -63,7 +63,7 @@ pipeline {
   "avatar_url": "${APP_URL}/mule3.png",
   "embeds": [{
     "title": "✅ Deployment Successful!",
-    "description": "**Application has been successfully deployed.**\\n\\n[Visit the app](${APP_URL})",
+    "description": "**Application has been successfully deployed.**\\n\\n",
     "color": 5814783,
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
@@ -71,7 +71,20 @@ pipeline {
     "image": { "url": "${APP_URL}/mule-logo-2.png" },
     "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-  }]
+  }],
+  "components": [
+    {
+      "type": 1,
+      "components": [
+        {
+          "type": 2,
+          "style": 5,
+          "label": "Visit the app",
+          "url": "${APP_URL}"
+        }
+      ]
+    }
+  ],
 }
 EOF
 
@@ -93,7 +106,7 @@ EOF
   "avatar_url": "${APP_URL}/mule3.png",
   "embeds": [{
     "title": "❌ Deployment Failed! ",
-    "description": "**Application has been fail to be deployed**\\n\\n[Visit the app](${APP_URL})",
+    "description": "**Application has been fail to be deployed**\\n\\n",
     "color": 15158332,
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
@@ -101,7 +114,20 @@ EOF
     "image": { "url": "${APP_URL}/mule-logo-fail.png" },
     "footer": { "text": "Deployed by Jenkins", "icon_url": "${APP_URL}/Jenkins_logo.svg.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-  }]
+  }],
+  "components": [
+    {
+      "type": 1,
+      "components": [
+        {
+          "type": 2,
+          "style": 5,
+          "label": "Visit the app",
+          "url": "${APP_URL}"
+        }
+      ]
+    }
+  ],
 }
 EOF
 
