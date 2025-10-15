@@ -98,7 +98,7 @@ EOF
     "fields": [
       { "name": "Commit", "value": "[${SHORT_SHA}](${GIT_REPO_URL}/tree/${GIT_COMMIT})", "inline": true }
     ],
-    "image": { "url": "${APP_URL}/mule-fail.png },
+    "image": { "url": "${APP_URL}/mule-fail.png" },
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   }]
 }
