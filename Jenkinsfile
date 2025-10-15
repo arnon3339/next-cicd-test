@@ -52,7 +52,7 @@ pipeline {
         sh '''
           curl -H "Content-Type: application/json" \
               -X POST \
-              -d "{\"content\": \"✅ **Deployment Successful**: ${JOB_NAME} #${BUILD_NUMBER} (${GIT_COMMIT:0:7})\"}" \
+              -d "{\"content\": \"✅ **Deployment Successful**\"}" \
               "$DISCORD_URL"
 
           echo "✅ Deployed ${CONTAINER} from ${env.GIT_COMMIT.take(7)}" 
@@ -65,7 +65,7 @@ pipeline {
         sh '''
           curl -H "Content-Type: application/json" \
               -X POST \
-              -d "{\"content\": \"❌ **Deployment Failed**: ${JOB_NAME} #${BUILD_NUMBER}\"}" \
+              -d "{\"content\": \"❌ **Deployment Failed**\"}" \
               "$DISCORD_URL"
 
           echo "❌ Deploy failed — check the console log" 
